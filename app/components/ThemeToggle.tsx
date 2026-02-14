@@ -5,7 +5,6 @@ import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-
   return (
     <div>
       <button

@@ -1,6 +1,12 @@
 import Link from "next/link";
 
-export default function NavBarLink({ page }: { page: string }) {
+export default function NavBarLink({
+  page,
+  pageName,
+}: {
+  page: string;
+  pageName: string;
+}) {
   return (
     <div>
       <Link
@@ -9,7 +15,7 @@ export default function NavBarLink({ page }: { page: string }) {
         after:absolute after:top-0 after:right-0 after:h-full after:w-0 after:bg-linear-to-l after:from-foreground/45 after:to-foreground/20 after:transition-all after:duration-300 hover:after:w-[50%]"
         href={`/${page}`}
       >
-        <span className="relative z-10">About Page</span>
+        <span className="relative z-10">{pageName}</span>
       </Link>
     </div>
   );
