@@ -3,6 +3,7 @@ import { SignupFormSchema, FormState } from "@/app/lib/definitions";
 import { supabaseAdmin } from "../lib/supabaseServer";
 import bcrypt from "bcryptjs";
 import { createSession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
 
 export async function signup(state: FormState, formData: FormData) {
   // Validate the form fields received from user submission
@@ -20,12 +21,13 @@ export async function signup(state: FormState, formData: FormData) {
   }
 
   const { username, email, password } = validatedFields.data;
+  const role = "user";
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const { data, error } = await supabaseAdmin
     .from("users")
-    .insert([{ username, email, hashedPassword }])
+    .insert([{ username, email, hashedPassword, role }])
     .select()
     .single();
   if (error) {
@@ -33,7 +35,8 @@ export async function signup(state: FormState, formData: FormData) {
   } else if (!data) {
     return { message: "insert not successful." };
   } else {
-    createSession(data.userId);
+    await createSession(data.userId, data.role);
+    redirect("/");
     return { message: "Succesful insert." };
   }
 }

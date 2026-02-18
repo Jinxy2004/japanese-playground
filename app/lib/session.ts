@@ -22,6 +22,11 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey);
 }
 
+/*
+This function is used to decrypt the users session. It first attempts to verify the session,
+it does this by passing the session and our encodedKey(secretKey) to a jose function. If this
+is successful than we return the payload, otherwise we error out.
+*/
 export async function decrypt(session: string | undefined = "") {
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
@@ -34,9 +39,9 @@ export async function decrypt(session: string | undefined = "") {
 }
 
 // Creates the users actual session, the session is an encryption of the users id and the expirary date of the token.
-export async function createSession(userId: string) {
+export async function createSession(userId: string, role: string) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const session = await encrypt({ userId, expiresAt });
+  const session = await encrypt({ userId, expiresAt, role });
   const cookieStore = await cookies();
 
   cookieStore.set("session", session, {
@@ -50,8 +55,8 @@ export async function createSession(userId: string) {
 
 // Function used to update or refresh a users session. Useful for say extending the users session after re-access of the application.
 export async function updateSession() {
-  const session = (await cookies()).get("session")?.value;
-  const payload = await decrypt(session);
+  const session = (await cookies()).get("session")?.value; // Grabs the users cookies
+  const payload = await decrypt(session); // Attempts to get the users payload via decrypting the current session.
 
   if (!session || !payload) {
     return null;
@@ -59,6 +64,7 @@ export async function updateSession() {
 
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
+  // Updates the users cookies.
   const cookieStore = await cookies();
   cookieStore.set("session", session, {
     httpOnly: true,
@@ -69,11 +75,13 @@ export async function updateSession() {
   });
 }
 
+// Deletes the users session from cookies.
 export async function deleteSession() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
 }
 
+// Basically just deletes the users session as a logout, but also redirects to the home page.
 export async function logout() {
   await deleteSession();
   redirect("/");
