@@ -1,5 +1,7 @@
+"use server";
 import { SignupFormSchema, FormState } from "@/app/lib/definitions";
-import { supabase } from "../lib/supabaseClient";
+import { supabaseAdmin } from "../lib/supabaseServer";
+import bcrypt from "bcryptjs";
 
 export async function signup(state: FormState, formData: FormData) {
   // Validate the form fields received from user submission
@@ -18,14 +20,19 @@ export async function signup(state: FormState, formData: FormData) {
 
   const { username, email, password } = validatedFields.data;
 
-  const { data, error } = await supabase
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const { data, error } = await supabaseAdmin
     .from("users")
-    .insert([{ username, email, password }])
+    .insert([{ username, email, hashedPassword }])
     .select()
     .single();
+
   if (error) {
-    return { message: error.message };
-  } else if (!data[0]) {
+    return { message: "Error inserting: " + error.message };
+  } else if (!data) {
     return { message: "insert not successful." };
+  } else {
+    return { message: "Succesful insert." };
   }
 }

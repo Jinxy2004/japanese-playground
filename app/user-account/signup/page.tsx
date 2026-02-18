@@ -23,17 +23,17 @@ export default function SignupForm() {
     */
     <form action={action}>
       <div>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Username </label>
         <input id="username" name="username" placeholder="username" />
       </div>
       {state?.errors?.username && <p>{state.errors.username}</p>}
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Email </label>
         <input id="email" name="email" type="email" placeholder="Email" />
       </div>
       {state?.errors?.email && <p>{state.errors.email}</p>}
       <div>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Password </label>
         <input id="password" name="password" type="password" />
       </div>
       {state?.errors?.password && (
@@ -49,6 +49,7 @@ export default function SignupForm() {
       <button type="submit" disabled={pending}>
         Sign Up
       </button>
+      {state?.message && <p>{state.message}</p>}
     </form>
   );
 }
