@@ -13,6 +13,9 @@ export default function FuriganaAdder() {
 
   return (
     <div className="flex flex-col h-screen items-center justify-start py-5">
+      <ruby>
+        私<rt>わたし</rt>
+      </ruby>
       <textarea
         value={inputText}
         // Because the components state is controlled by inputText which is managed by react state we have to use onChange for the users text to update the UI.
