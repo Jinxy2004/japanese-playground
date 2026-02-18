@@ -16,7 +16,7 @@ export default function NavBar() {
           <ThemeToggle />
         </div>
         <div className="absolute right-0">
-          <Button btnText="Sign Up/Sign In" />
+          <Button btnText="Sign Up/Sign In" path="/user-account" />
         </div>
       </div>
     </div>
