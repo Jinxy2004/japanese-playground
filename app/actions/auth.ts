@@ -2,6 +2,7 @@
 import { SignupFormSchema, FormState } from "@/app/lib/definitions";
 import { supabaseAdmin } from "../lib/supabaseServer";
 import bcrypt from "bcryptjs";
+import { createSession } from "@/app/lib/session";
 
 export async function signup(state: FormState, formData: FormData) {
   // Validate the form fields received from user submission
@@ -27,12 +28,12 @@ export async function signup(state: FormState, formData: FormData) {
     .insert([{ username, email, hashedPassword }])
     .select()
     .single();
-
   if (error) {
     return { message: "Error inserting: " + error.message };
   } else if (!data) {
     return { message: "insert not successful." };
   } else {
+    createSession(data.userId);
     return { message: "Succesful insert." };
   }
 }
