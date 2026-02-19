@@ -3,7 +3,7 @@ This is a data access layer file. Its purpose is to check if the users session i
 and then based upon those results either redirect the user, or return information.
 */
 
-import "server-only";
+"use server";
 
 import { cookies } from "next/headers";
 import { decrypt } from "./session";
@@ -18,6 +18,17 @@ export const verifySession = cache(async () => {
 
   if (!session?.userId) {
     redirect("/app/user-account");
+  }
+
+  return { isAuth: true, userId: session.userId, role: session.role };
+});
+
+export const verifySessionNoRedirect = cache(async () => {
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
+  if (!session?.userId) {
+    return { message: "Bad session." };
   }
 
   return { isAuth: true, userId: session.userId, role: session.role };

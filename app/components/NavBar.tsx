@@ -1,8 +1,13 @@
+"use server";
 import { ThemeToggle } from "./ThemeToggle";
 import NavBarLink from "./NavBarLink";
 import Button from "./Button";
+import { verifySessionNoRedirect } from "../lib/dal";
+import { logout } from "../lib/session";
 
-export default function NavBar() {
+export default async function NavBar() {
+  const isLoggedIn = (await verifySessionNoRedirect())?.userId;
+
   return (
     /*
 This navbar works by first creating an outer div which houses everything. Then we create a div that will house
@@ -21,7 +26,19 @@ other buttons we justify-end so that they stick to the end
 
         <div className="flex justify-end gap-1.5">
           <ThemeToggle />
-          <Button btnText="Sign Up/Sign In" path="/user-account/signup" />
+          {isLoggedIn ? (
+            <form action={logout}>
+              <button
+                type="submit"
+                className="rounded-lg border border-foreground/30 bg-background px-3 py-1.5 
+    transition-all duration-200 hover:bg-linear-to-r hover:from-foreground/20 hover:to-foreground/5"
+              >
+                Log Out
+              </button>
+            </form>
+          ) : (
+            <Button btnText="Sign Up/Sign In" path="/user-account/signup" />
+          )}
         </div>
       </div>
     </div>

@@ -21,35 +21,38 @@ export default function SignupForm() {
         by matching the htmlFor with the id. The input is where the user actually types and we have id as an attribute to link it back to the label,
         then the name is curcial for the server, because this is the key that the server uses to collect data. 
     */
-    <form action={action}>
-      <div>
-        <label htmlFor="username">Username </label>
-        <input id="username" name="username" placeholder="username" />
-      </div>
-      {state?.errors?.username && <p>{state.errors.username}</p>}
-      <div>
-        <label htmlFor="email">Email </label>
-        <input id="email" name="email" type="email" placeholder="Email" />
-      </div>
-      {state?.errors?.email && <p>{state.errors.email}</p>}
-      <div>
-        <label htmlFor="password">Password </label>
-        <input id="password" name="password" type="password" />
-      </div>
-      {state?.errors?.password && (
+    // The 100dvh-88px is to account for the height of the navbar
+    <div className="flex min-h-[calc(100dvh-88px)] items-center justify-center px-4">
+      <form action={action} className="flex w-full max-w-md flex-col gap-4">
         <div>
-          <p>Password must:</p>
-          <ul>
-            {state.errors.password.map((error) => (
-              <li key={error}>- {error}</li>
-            ))}
-          </ul>
+          <label htmlFor="username">Username </label>
+          <input id="username" name="username" placeholder="username" />
         </div>
-      )}
-      <button type="submit" disabled={pending}>
-        Sign Up
-      </button>
-      {state?.message && <p>{state.message}</p>}
-    </form>
+        {state?.errors?.username && <p>{state.errors.username}</p>}
+        <div>
+          <label htmlFor="email">Email </label>
+          <input id="email" name="email" type="email" placeholder="Email" />
+        </div>
+        {state?.errors?.email && <p>{state.errors.email}</p>}
+        <div>
+          <label htmlFor="password">Password </label>
+          <input id="password" name="password" type="password" />
+        </div>
+        {state?.errors?.password && (
+          <div>
+            <p>Password must:</p>
+            <ul>
+              {state.errors.password.map((error) => (
+                <li key={error}>- {error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <button type="submit" disabled={pending}>
+          Sign Up
+        </button>
+        {state?.message && <p>{state.message}</p>}
+      </form>
+    </div>
   );
 }
